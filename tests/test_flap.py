@@ -1,0 +1,30 @@
+# run using nosetests --with-coverage --cover-html
+
+from nose.tools import raises, assert_raises
+import shutthebox
+
+class TestFlap(object):
+    def setUp(self):
+        self.flap = shutthebox.Flap(1)
+
+    def test_number(self):
+        assert self.flap.number == 1
+
+    @raises(ValueError)
+    def test_number_too_small(self):
+        shutthebox.Flap(0)
+
+    @raises(ValueError)
+    def test_number_non_int(self):
+        shutthebox.Flap(1.5)
+
+    def test_up_by_default(self):
+        assert self.flap.is_down is False
+
+    def test_lower(self):
+        self.flap.lower()
+        assert self.flap.is_down
+
+    def test_lower_when_already_down(self):
+        self.flap.lower()
+        assert_raises(RuntimeError, self.flap.lower)
