@@ -1,5 +1,6 @@
 import random
 import itertools
+import collections
 
 class Flap(object):
     """
@@ -145,6 +146,22 @@ class ComputerTurn(Turn):
     def __init__(self, box, dice):
         super(ComputerTurn, self).__init__(box, dice)
 
+        # create dict of probabilities for rolling particular dice sums
+
+        dice_sums = []
+        # for each possible outcome of n dice, sum dice numbers
+        for dice_numbers in itertools.product(range(1, 6 + 1),
+                                              repeat = dice.num_dice):
+            dice_sums.append(sum(dice_numbers))
+
+        # calculate frequency of each dice sum
+        frequencies = collections.Counter(dice_sums)
+
+        # calculate proportion for each dice sum
+        self.dice_sum_probabilities = {}
+        for key, value in frequencies.iteritems():
+            self.dice_sum_probabilities[key] = value / float(len(dice_sums))
+
     def remove_greater_than(self, list, n):
         """
         From a supplied list, returns a new list with any original elements 
@@ -155,7 +172,8 @@ class ComputerTurn(Turn):
         new_list = [x for x in list if not x > n]
         return new_list
 
-    def make_flap_decision_highest(self, flap_nums, dice_total):
+    def make_flap_decision_highest(
+            self, flap_nums, dice_total, num_dice_decision_method = None):
         """
         Returns a list of numbers which sum to the dice total from a list of
         possible flap numbers, or False if this is impossible. Always prefers 
@@ -189,7 +207,8 @@ class ComputerTurn(Turn):
 
         return False
 
-    def make_flap_decision_lowest(self, flap_nums, dice_total):
+    def make_flap_decision_lowest(
+            self, flap_nums, dice_total, num_dice_decision_method = None):
         """
         Returns a list of numbers which sum to the dice total from a list of 
         possible flap numbers, or False if this is impossible. Always prefers 
@@ -215,6 +234,94 @@ class ComputerTurn(Turn):
 
         return False
 
+    def calculate_success_probability(
+            self, flap_nums, num_dice_decision_method):
+        """
+        Calculate the probability of being able to close at least one flap if
+        the flaps in the flap_nums list are left open. Use the decision method
+        supplied to decide how many dice to use.
+        """
+        single_die = False
+        # if allowed to use a single die and we decide to
+        if (sum(flap_nums) <= self.max_flap_sum_single_die and
+                num_dice_decision_method() == 1):
+            single_die = True
+            possible_dice_sums = range(1, 6 + 1)
+        else:
+            possible_dice_sums = self.dice_sum_probabilities.keys()
+
+        prob = 0
+
+        for dice_sum in possible_dice_sums:
+            this_dice_sum_success = False
+            # try all lengths of combinations of flaps supplied
+            for length in range(1, len(flap_nums) + 1):
+                for this_combination in itertools.combinations(
+                        flap_nums, length):
+                    # if we find one, add probability of rolling this dice sum
+                    if sum(this_combination) == dice_sum:
+                        if single_die:
+                            prob += 1/float(6)
+                        else:
+                            prob += self.dice_sum_probabilities[dice_sum]
+                        this_dice_sum_success = True
+                        # stop trying combinations of this length
+                        break
+                # stop trying combinations of any length
+                if this_dice_sum_success: break
+
+        return prob
+
+    def make_flap_decision_next_roll_probability(
+            self, flap_nums, dice_total, num_dice_decision_method):
+        """
+        Returns a list of numbers which sum to the dice total from a list of
+        possible flap numbers, or False if this is impossible. Chooses flap
+        numbers which maximise the probability of success on the next roll using
+        the calculate_success_probability() method. Uses the decision method
+        supplied to decide how many dice to use in calculating probabilities
+        for the next roll.
+        """
+
+        # create an empty dict to hold next-turn success probabilities
+        # key: tuple of flap numbers (can't use a list)
+        # value: probability of being able to close at least one flap on the
+        #   next roll if these flaps are closed i.e. not failing on next roll
+        # TODO in Python 3 we can just use a dict
+        probabilities = collections.OrderedDict([])
+
+        # just the flaps that are <= the dice total
+        closeable_flap_nums = self.remove_greater_than(flap_nums, dice_total)
+
+        # use combinations of flaps, preferring higher numbers
+        # sort because flaps dict not returned in any specific order
+        closeable_flap_nums.sort()
+        closeable_flap_nums.reverse()
+
+        # for each possible number of flaps starting with fewest flaps
+        for length in range(1, len(closeable_flap_nums) + 1):
+            # for each combination with this number of flaps
+            for this_combination in itertools.combinations(
+                    closeable_flap_nums, length):
+                # check combination sums to dice total and try next if not
+                if sum(this_combination) != dice_total: continue
+
+                # flaps that would be left if we closed this combination
+                remaining_flaps = [n for n in flap_nums if n not in this_combination]
+
+                probabilities[this_combination] = \
+                    self.calculate_success_probability(
+                        remaining_flaps, num_dice_decision_method)
+
+        # if no flaps can be closed
+        if not len(probabilities):
+            return False
+
+        # choose flap combination with best probability of success on next roll
+        chosen_flaps = max(probabilities, key = probabilities.get)
+
+        return list(chosen_flaps) # instead of tuple
+
     def make_num_dice_decision_one_if_poss(self):
         """
         Returns how many dice to roll if we're allowed to roll a single die. 
@@ -237,13 +344,14 @@ class ComputerTurn(Turn):
 
         num_dice_decision_method (method): default
             make_num_dice_decision_one_if_poss
-        flap_decision_method (method): default make_flap_decision_highest
+        flap_decision_method (method): default
+            make_flap_decision_next_roll_probability
         debug (bool): print debug information relating to this roll?
         """
         if num_dice_decision_method is None:
             num_dice_decision_method = self.make_num_dice_decision_one_if_poss
         if flap_decision_method is None:
-            flap_decision_method = self.make_flap_decision_highest
+            flap_decision_method = self.make_flap_decision_next_roll_probability
 
         # roll all the dice or a single die
         # if our decision method returns 1 (die) and we're allowed to roll a
@@ -259,8 +367,8 @@ class ComputerTurn(Turn):
 
         # decide which flaps to lower and lower them
         available_flap_nums = self.box.get_available_flaps().keys()
-        flap_nums_to_lower = flap_decision_method(available_flap_nums,
-                                                  dice_total)
+        flap_nums_to_lower = flap_decision_method(
+            available_flap_nums, dice_total, num_dice_decision_method)
         if not flap_nums_to_lower: # if impossible to lower any flaps
             if debug: print 'Impossible to lower any flaps'
             return False
