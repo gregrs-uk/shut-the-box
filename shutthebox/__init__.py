@@ -492,7 +492,7 @@ class HumanTurn(Turn):
 
         return flap_nums
 
-    def perform_roll(self):
+    def perform_roll(self): # pragma: no cover
         """
         Perform a dice roll and lower flaps based on the player's decisions.
         """
@@ -532,7 +532,7 @@ class HumanTurn(Turn):
         print
         return True
 
-    def perform_turn(self):
+    def perform_turn(self): # pragma: no cover
         """
         Performs this turn and returns the resulting score i.e. sum of flap 
         numbers.

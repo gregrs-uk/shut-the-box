@@ -1,5 +1,3 @@
-# run using nosetests --with-coverage --cover-html
-
 from nose.tools import raises, assert_raises
 import shutthebox
 
