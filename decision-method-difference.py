@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """
 Look for differences between the flap decision methods
 make_flap_decision_highest and make_flap_decision_next_roll_probability.

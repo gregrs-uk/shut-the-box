@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import shutthebox
 from sys import exit
 

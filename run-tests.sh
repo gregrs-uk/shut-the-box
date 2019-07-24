@@ -1,3 +1,3 @@
 #!/bin/sh
 
-nosetests --with-coverage --cover-html
+nosetests-3.4 --with-coverage --cover-html
