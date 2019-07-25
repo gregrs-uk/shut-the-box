@@ -47,7 +47,7 @@ class Box(object):
         Returns a dict of objects for the flaps that are currently up.
         """
         available_flaps = {}
-        for this_flap_num, this_flap in self.flaps.iteritems():
+        for this_flap_num, this_flap in self.flaps.items():
             if not this_flap.is_down:
                 available_flaps[this_flap.number] = this_flap
 
@@ -57,7 +57,7 @@ class Box(object):
         """
         Returns the sum of the numbers of the available flaps.
         """
-        available_flap_nums = self.get_available_flaps().keys()
+        available_flap_nums = list(self.get_available_flaps().keys())
         return sum(available_flap_nums)
 
     def __str__(self):
@@ -70,7 +70,7 @@ class Box(object):
         down_string = 'DOWN: '
 
         # add flap numbers / equivalent number of spaces to up/down strings
-        flap_range = range(1, self.num_flaps + 1)
+        flap_range = list(range(1, self.num_flaps + 1))
         for this_flap_no in flap_range:
             if self.flaps[this_flap_no].is_down:
                 for this_char in str(this_flap_no):
@@ -150,7 +150,7 @@ class ComputerTurn(Turn):
 
         dice_sums = []
         # for each possible outcome of n dice, sum dice numbers
-        for dice_numbers in itertools.product(range(1, 6 + 1),
+        for dice_numbers in itertools.product(list(range(1, 6 + 1)),
                                               repeat = dice.num_dice):
             dice_sums.append(sum(dice_numbers))
 
@@ -159,7 +159,7 @@ class ComputerTurn(Turn):
 
         # calculate proportion for each dice sum
         self.dice_sum_probabilities = {}
-        for key, value in frequencies.iteritems():
+        for key, value in frequencies.items():
             self.dice_sum_probabilities[key] = value / float(len(dice_sums))
 
     def remove_greater_than(self, list, n):
@@ -246,9 +246,9 @@ class ComputerTurn(Turn):
         if (sum(flap_nums) <= self.max_flap_sum_single_die and
                 num_dice_decision_method() == 1):
             single_die = True
-            possible_dice_sums = range(1, 6 + 1)
+            possible_dice_sums = list(range(1, 6 + 1))
         else:
-            possible_dice_sums = self.dice_sum_probabilities.keys()
+            possible_dice_sums = list(self.dice_sum_probabilities.keys())
 
         prob = 0
 
@@ -358,21 +358,21 @@ class ComputerTurn(Turn):
         # single die, do this
         if (num_dice_decision_method() == 1 and
             self.box.sum_available_flaps() <= self.max_flap_sum_single_die):
-            if debug: print 'Rolling single die'
+            if debug: print('Rolling single die')
             dice_total = self.dice.roll(1)
         else:
             dice_total = self.dice.roll()
-            if debug: print 'Rolling all dice'
-        if debug: print 'Dice total: {}'.format(dice_total)
+            if debug: print('Rolling all dice')
+        if debug: print('Dice total: {}'.format(dice_total))
 
         # decide which flaps to lower and lower them
-        available_flap_nums = self.box.get_available_flaps().keys()
+        available_flap_nums = list(self.box.get_available_flaps().keys())
         flap_nums_to_lower = flap_decision_method(
             available_flap_nums, dice_total, num_dice_decision_method)
         if not flap_nums_to_lower: # if impossible to lower any flaps
-            if debug: print 'Impossible to lower any flaps'
+            if debug: print('Impossible to lower any flaps')
             return False
-        if debug: print 'Lowering flaps: {}'.format(flap_nums_to_lower)
+        if debug: print('Lowering flaps: {}'.format(flap_nums_to_lower))
         for this_flap_num in flap_nums_to_lower:
             self.box.flaps[this_flap_num].lower()
 
@@ -388,8 +388,8 @@ class ComputerTurn(Turn):
         """
 
         if debug:
-            print self.box
-            print 'Flap sum: {}'.format(self.box.sum_available_flaps())
+            print(self.box)
+            print('Flap sum: {}'.format(self.box.sum_available_flaps()))
 
         # check whether all flaps are already down before each roll
         # if roll performed and no flaps could be lowered, stop the turn
@@ -399,9 +399,9 @@ class ComputerTurn(Turn):
                    num_dice_decision_method = num_dice_decision_method,
                    flap_decision_method = flap_decision_method)):
             if debug:
-                print
-                print self.box
-                print 'Flap sum: {}'.format(self.box.sum_available_flaps())
+                print()
+                print(self.box)
+                print('Flap sum: {}'.format(self.box.sum_available_flaps()))
 
         score = self.box.sum_available_flaps()
         self.box.__init__() # re-initialise our box with all flaps up
@@ -435,19 +435,19 @@ class HumanTurn(Turn):
         try:
             n = int(string)
         except ValueError:
-            print msg_invalid
+            print(msg_invalid)
             return False
 
         # invalid number of dice
         if not (n >= 1 and n <= self.dice.num_dice):
-            print msg_invalid
+            print(msg_invalid)
             return False
 
         # single die chosen but not allowed
         if (n == 1 and
             self.box.sum_available_flaps() > self.max_flap_sum_single_die):
-            print ('You can only use a single die when the flap numbers add ' +
-                   'up to {} or less'.format(self.max_flap_sum_single_die))
+            print(('You can only use a single die when the flap numbers add ' +
+                   'up to {} or less'.format(self.max_flap_sum_single_die)))
             return False
 
         return n
@@ -475,19 +475,19 @@ class HumanTurn(Turn):
                 if not int(this_string) in flap_nums:
                     flap_nums.append(int(this_string))
             except ValueError:
-                print '{} is not a valid flap number'.format(this_string)
+                print('{} is not a valid flap number'.format(this_string))
                 return False
 
         for this_flap_num in flap_nums:
-            if not this_flap_num in self.box.flaps.keys():
-                print '{} is not a valid flap number'.format(this_flap_num)
+            if not this_flap_num in list(self.box.flaps.keys()):
+                print('{} is not a valid flap number'.format(this_flap_num))
                 return False
             if self.box.flaps[this_flap_num].is_down:
-                print 'Flap {} is already down'.format(this_flap_num)
+                print('Flap {} is already down'.format(this_flap_num))
                 return False
 
         if len(flap_nums) and sum(flap_nums) != dice_total:
-            print 'Flaps chosen do not add up to dice total'
+            print('Flaps chosen do not add up to dice total')
             return False
 
         return flap_nums
@@ -496,13 +496,13 @@ class HumanTurn(Turn):
         """
         Perform a dice roll and lower flaps based on the player's decisions.
         """
-        print self.box
-        print
+        print(self.box)
+        print()
 
         # if flap sum <= max_flap_sum_single_die, ask how many dice to roll
         if self.box.sum_available_flaps() <= self.max_flap_sum_single_die:
             while True: # until we get a valid response
-                num_dice_input = raw_input(
+                num_dice_input = input(
                     'How many dice would you like to roll? (between ' +
                     '1 and {}) '.format(self.dice.num_dice))
                 num_dice = self.check_num_dice_decision(num_dice_input)
@@ -512,10 +512,10 @@ class HumanTurn(Turn):
             num_dice = self.dice.num_dice
 
         dice_total = self.dice.roll(num_dice)
-        print 'Dice total: {}'.format(dice_total)
+        print('Dice total: {}'.format(dice_total))
 
         while True: # until we get a list of flap nums or empty list
-            flaps_input = raw_input(
+            flaps_input = input(
                 'Which flaps would you like to lower?\n' +
                 '(Separate with spaces and leave blank for none) ')
             flap_nums = self.check_flaps_decision(flaps_input, dice_total)
@@ -529,7 +529,7 @@ class HumanTurn(Turn):
         for this_flap_num in flap_nums:
             self.box.flaps[this_flap_num].lower()
 
-        print
+        print()
         return True
 
     def perform_turn(self): # pragma: no cover
@@ -540,12 +540,12 @@ class HumanTurn(Turn):
         while self.box.sum_available_flaps > 0 and self.perform_roll():
             pass
 
-        print
+        print()
         score = self.box.sum_available_flaps()
         if score == 0:
-            print 'You have lowered all the flaps and shut the box. Well done!'
+            print('You have lowered all the flaps and shut the box. Well done!')
         else:
-            print 'Your score was {}.'.format(score)
+            print('Your score was {}.'.format(score))
 
         self.box.__init__() # re-initialise our box with all flaps up
         return score

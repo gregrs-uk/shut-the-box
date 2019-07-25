@@ -8,9 +8,9 @@ class TestComputerTurn(object):
         three_dice = shutthebox.Dice(num_dice = 3)
         self.turn = shutthebox.ComputerTurn(box, dice)
 
-        self.one_to_nine = range(1, 9 + 1)
+        self.one_to_nine = list(range(1, 9 + 1))
         assert len(self.one_to_nine) == 9
-        self.one_to_four = range(1, 4 + 1)
+        self.one_to_four = list(range(1, 4 + 1))
         assert len(self.one_to_four) == 4
 
     def test_computer_turn_is_subclass_of_turn(self):
@@ -114,14 +114,14 @@ class TestComputerTurn(object):
         # for comparison with test below
         # (c.f. calculate_success_probability tests above)
         flaps = self.turn.make_flap_decision_next_roll_probability(
-            range(1, 5 + 1), 7, self.turn.make_num_dice_decision_one_if_poss)
+            list(range(1, 5 + 1)), 7, self.turn.make_num_dice_decision_one_if_poss)
         assert flaps == [4, 3]
 
     def test_flap_decision_highest_1to5_roll_7(self):
         # for comparison with test above
         flaps = self.turn.make_flap_decision_highest(
-            range(1, 5 + 1), 7, self.turn.make_num_dice_decision_one_if_poss)
-        print flaps
+            list(range(1, 5 + 1)), 7, self.turn.make_num_dice_decision_one_if_poss)
+        print(flaps)
         assert flaps == [2, 5]
 
     def test_flap_decision_next_roll_prob_impossible(self):

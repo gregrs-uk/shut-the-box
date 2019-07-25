@@ -9,7 +9,7 @@ def check_another_game_choice(string):
         return True
     elif string[0].lower() == 'n':
         return False
-    print 'Please enter Y or N'
+    print('Please enter Y or N')
     return None
 
 while True:
@@ -17,9 +17,9 @@ while True:
     turn.perform_turn()
     while True: # until we get a valid choice
         choice = check_another_game_choice(
-            raw_input('Play another turn? [Y/N] '))
+            input('Play another turn? [Y/N] '))
         if choice is True:
-            print
+            print()
             break
         if choice is False:
             exit()

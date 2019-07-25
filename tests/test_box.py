@@ -32,16 +32,16 @@ class TestBox(object):
 
     def test_get_available_flaps_returns_correct_flaps(self):
         small_box = shutthebox.Box(3)
-        assert small_box.get_available_flaps().keys() == [1, 2, 3]
+        assert list(small_box.get_available_flaps().keys()) == [1, 2, 3]
         small_box.flaps[2].lower()
-        assert small_box.get_available_flaps().keys() == [1, 3]
+        assert list(small_box.get_available_flaps().keys()) == [1, 3]
 
     def test_sum_available_flaps_default(self):
         assert self.box.sum_available_flaps() == 45 # 9 + 8 + 7 + ... + 1
 
     def test_sum_available_flaps_none(self):
         # lower all flaps
-        for this_flap_num in self.box.flaps.keys():
+        for this_flap_num in list(self.box.flaps.keys()):
             self.box.flaps[this_flap_num].lower()
         assert self.box.sum_available_flaps() == 0
 
@@ -50,7 +50,7 @@ class TestBox(object):
                                      'DOWN:                           ')
 
     def test_str_flaps_all_down(self):
-        for this_flap_num, this_flap in self.big_box.flaps.iteritems():
+        for this_flap_num, this_flap in self.big_box.flaps.items():
             this_flap.lower()
         assert str(self.big_box) == ('  UP:                           \n' +
                                      'DOWN: 1 2 3 4 5 6 7 8 9 10 11 12')
