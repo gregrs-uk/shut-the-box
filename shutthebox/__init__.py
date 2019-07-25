@@ -52,12 +52,8 @@ class Box(object):
         """
         Returns a dict of objects for the flaps that are currently up.
         """
-        available_flaps = {}
-        for this_flap_num, this_flap in self.flaps.items():
-            if not this_flap.is_down:
-                available_flaps[this_flap.number] = this_flap
-
-        return available_flaps
+        return {num: flap for num, flap in self.flaps.items()
+                if not flap.is_down}
 
     def sum_available_flaps(self):
         """
