@@ -1,4 +1,4 @@
-class Flap(object):
+class Flap:
     """
     One of the flaps on the box. They start raised and can be lowered.
 

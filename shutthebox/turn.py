@@ -1,7 +1,7 @@
 from .box import Box
 from .dice import Dice
 
-class Turn(object):
+class Turn:
     """
     A turn (taken by the computer or a human) in which the dice are
     rolled and flaps are lowered, probably multiple times, until the

@@ -1,6 +1,6 @@
 from .flap import Flap
 
-class Box(object):
+class Box:
     """
     The box, which contains a number of flaps.
 

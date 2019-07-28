@@ -1,6 +1,6 @@
 import random
 
-class Dice(object):
+class Dice:
     """
     One or more dice used in playing the game.
 

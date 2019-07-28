@@ -1,7 +1,7 @@
 from nose.tools import raises, assert_raises
 import shutthebox
 
-class TestFlap(object):
+class TestFlap:
     def setUp(self):
         self.flap = shutthebox.Flap(1)
 
