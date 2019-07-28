@@ -6,6 +6,8 @@ ComputerTurn.
 from .box import Box
 from .dice import Dice
 
+# pylint: disable=too-few-public-methods
+
 class Turn:
     """
     A turn (taken by the computer or a human) in which the dice are
@@ -23,4 +25,3 @@ class Turn:
 
         # max sum of flap numbers to be allowed to roll a single die
         self.max_flap_sum_single_die = 6
-

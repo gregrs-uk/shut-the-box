@@ -9,10 +9,10 @@ if sys.version_info.major < 3: # pragma: no cover
              str(sys.version_info.major) + '.' +
              str(sys.version_info.minor) + '.')
 
+# pylint: disable=wrong-import-position
 from .flap import Flap
 from .dice import Dice
 from .box import Box
 from .turn import Turn
 from .humanturn import HumanTurn
 from .computerturn import ComputerTurn
-

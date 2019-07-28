@@ -2,6 +2,8 @@
 Defines the Flap class of shutthebox.
 """
 
+# pylint: disable=too-few-public-methods
+
 class Flap:
     """
     One of the flaps on the box. They start raised and can be lowered.
@@ -24,4 +26,3 @@ class Flap:
         if self.is_down:
             raise RuntimeError('Trying to lower a flap that is already down')
         self.is_down = True
-

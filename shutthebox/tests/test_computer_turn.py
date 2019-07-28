@@ -2,18 +2,17 @@
 Tests for the ComputerTurn class of shutthebox.
 """
 
-from nose.tools import raises
 import shutthebox
 
 # pylint: disable=missing-docstring
 # pylint: disable=no-self-use
 # pylint: disable=attribute-defined-outside-init
+# pylint: disable=too-many-public-methods
 
 class TestComputerTurn:
     def setup(self):
         box = shutthebox.Box()
         dice = shutthebox.Dice()
-        three_dice = shutthebox.Dice(num_dice = 3)
         self.turn = shutthebox.ComputerTurn(box, dice)
 
         self.one_to_nine = list(range(1, 9 + 1))
@@ -135,7 +134,7 @@ class TestComputerTurn:
     def test_flap_decision_next_roll_prob_impossible(self):
         flaps = self.turn.make_flap_decision_next_roll_probability(
             [3], 2, self.turn.make_num_dice_decision_one_if_poss)
-        assert flaps == False
+        assert flaps is False
 
     def test_num_dice_decision_always_all(self):
         assert self.turn.make_num_dice_decision_always_all() == 2
@@ -146,9 +145,9 @@ class TestComputerTurn:
     def test_turn_returns_valid_score(self):
         # try 1000 turns
         for _ in range(0, 1000):
-            score = self.turn.perform_turn() 
-            assert isinstance(score, int) and score >= 0 and score <= 45
+            score = self.turn.perform_turn()
+            assert isinstance(score, int) and 0 <= score <= 45
 
     def test_turn_with_debug(self):
-        score = self.turn.perform_turn(debug=True) 
-        assert isinstance(score, int) and score >= 0 and score <= 45
+        score = self.turn.perform_turn(debug=True)
+        assert isinstance(score, int) and 0 <= score <= 45

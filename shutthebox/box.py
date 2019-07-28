@@ -11,7 +11,7 @@ class Box:
     num_flaps (int): how many flaps the box has (default 9)
     """
 
-    def __init__(self, num_flaps = 9):
+    def __init__(self, num_flaps=9):
         if not (isinstance(num_flaps, int) and num_flaps >= 1):
             raise ValueError('num_flaps must be an integer >= 1')
 
@@ -40,8 +40,10 @@ class Box:
           UP: 1 2 3 4 5 6   8 9
         DOWN:             7
         """
-        up_string =   '  UP: '
+        # pylint: disable=bad-whitespace
+        up_string   = '  UP: '
         down_string = 'DOWN: '
+        # pylint: enable=bad-whitespace
 
         # add flap numbers / equivalent number of spaces to up/down strings
         flap_range = range(1, self.num_flaps + 1)
@@ -59,4 +61,3 @@ class Box:
                 down_string += ' '
 
         return up_string + '\n' + down_string
-

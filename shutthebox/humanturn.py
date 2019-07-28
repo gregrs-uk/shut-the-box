@@ -9,8 +9,7 @@ class HumanTurn(Turn):
     A subclass of Turn to represent turns taken by a human player.
     """
 
-    def __init__(self, box, dice):
-        super(HumanTurn, self).__init__(box, dice)
+    # __init__ inherited from Turn
 
     def check_num_dice_decision(self, string):
         """
@@ -30,24 +29,24 @@ class HumanTurn(Turn):
 
         # can't convert string to integer
         try:
-            n = int(string)
+            dice_requested = int(string)
         except ValueError:
             print(msg_invalid)
             return False
 
         # invalid number of dice
-        if not (n >= 1 and n <= self.dice.num_dice):
+        if dice_requested < 1 or dice_requested > self.dice.num_dice:
             print(msg_invalid)
             return False
 
         # single die chosen but not allowed
-        if (n == 1 and
-            self.box.sum_available_flaps() > self.max_flap_sum_single_die):
+        if (dice_requested == 1 and
+                self.box.sum_available_flaps() > self.max_flap_sum_single_die):
             print('You can only use a single die when the flap numbers add ' +
                   'up to {} or less'.format(self.max_flap_sum_single_die))
             return False
 
-        return n
+        return dice_requested
 
     def check_flaps_decision(self, string, dice_total):
         """
@@ -69,7 +68,7 @@ class HumanTurn(Turn):
         for this_string in flap_num_strings:
             try:
                 # check this flap not already specified
-                if not int(this_string) in flap_nums:
+                if int(this_string) not in flap_nums:
                     flap_nums.append(int(this_string))
             except ValueError:
                 print('{} is not a valid flap number'.format(this_string))
@@ -83,7 +82,7 @@ class HumanTurn(Turn):
                 print('Flap {} is already down'.format(this_flap_num))
                 return False
 
-        if len(flap_nums) and sum(flap_nums) != dice_total:
+        if flap_nums and sum(flap_nums) != dice_total:
             print('Flaps chosen do not add up to dice total')
             return False
 
@@ -103,7 +102,7 @@ class HumanTurn(Turn):
                     'How many dice would you like to roll? (between ' +
                     '1 and {}) '.format(self.dice.num_dice))
                 num_dice = self.check_num_dice_decision(num_dice_input)
-                if num_dice != False:
+                if num_dice:
                     break
         else: # use all dice
             num_dice = self.dice.num_dice
@@ -117,7 +116,7 @@ class HumanTurn(Turn):
                 '(Separate with spaces and leave blank for none) ')
             flap_nums = self.check_flaps_decision(flaps_input, dice_total)
             if isinstance(flap_nums, list):
-                if len(flap_nums):
+                if flap_nums:
                     break
                 else: # empty list i.e. no flaps
                     return False
@@ -146,4 +145,3 @@ class HumanTurn(Turn):
 
         self.box.__init__() # re-initialise our box with all flaps up
         return score
-

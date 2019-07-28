@@ -20,7 +20,7 @@ class ComputerTurn(Turn):
         dice_sums = []
         # for each possible outcome of n dice, sum dice numbers
         for dice_numbers in itertools.product(range(1, 6 + 1),
-                                              repeat = dice.num_dice):
+                                              repeat=dice.num_dice):
             dice_sums.append(sum(dice_numbers))
 
         # calculate frequency of each dice sum
@@ -31,18 +31,22 @@ class ComputerTurn(Turn):
         for dice_sum, freq in frequencies.items():
             self.dice_sum_probabilities[dice_sum] = freq / len(dice_sums)
 
-    def remove_greater_than(self, list, n):
+    @staticmethod
+    def remove_greater_than(lst, num):
         """
         From a supplied list, returns a new list with any original
-        elements which were greater than n removed.
+        elements which were greater than num removed.
 
-        list (list): original list from which to remove elements
+        lst (list): original list from which to remove elements
         """
-        new_list = [x for x in list if not x > n]
-        return new_list
+        return [x for x in lst if not x > num]
+
+    # flap decision methods need the same arguments even if they don't
+    # use all of them
+    # pylint: disable=unused-argument
 
     def make_flap_decision_highest(
-            self, flap_nums, dice_total, num_dice_decision_method = None):
+            self, flap_nums, dice_total, num_dice_decision_method=None):
         """
         Returns a list of numbers which sum to the dice total from a
         list of possible flap numbers, or False if this is impossible.
@@ -77,7 +81,7 @@ class ComputerTurn(Turn):
         return False
 
     def make_flap_decision_lowest(
-            self, flap_nums, dice_total, num_dice_decision_method = None):
+            self, flap_nums, dice_total, num_dice_decision_method=None):
         """
         Returns a list of numbers which sum to the dice total from a
         list of possible flap numbers, or False if this is impossible.
@@ -130,14 +134,15 @@ class ComputerTurn(Turn):
                     # if we find one, add probability of rolling this dice sum
                     if sum(this_combination) == dice_sum:
                         if single_die:
-                            prob += 1/float(6)
+                            prob += 1/6
                         else:
                             prob += self.dice_sum_probabilities[dice_sum]
                         this_dice_sum_success = True
                         # stop trying combinations of this length
                         break
                 # stop trying combinations of any length
-                if this_dice_sum_success: break
+                if this_dice_sum_success:
+                    break
 
         return prob
 
@@ -172,25 +177,30 @@ class ComputerTurn(Turn):
             for this_combination in itertools.combinations(
                     closeable_flap_nums, length):
                 # check combination sums to dice total and try next if not
-                if sum(this_combination) != dice_total: continue
+                if sum(this_combination) != dice_total:
+                    continue
 
                 # flaps that would be left if we closed this combination
-                remaining_flaps = [n for n in flap_nums if n not in this_combination]
+                remaining_flaps = [n for n in flap_nums
+                                   if n not in this_combination]
 
                 probabilities[this_combination] = \
                     self.calculate_success_probability(
                         remaining_flaps, num_dice_decision_method)
 
         # if no flaps can be closed
-        if not len(probabilities):
+        if not probabilities:
             return False
 
         # choose flap combination with best probability of success on next roll
-        chosen_flaps = max(probabilities, key = probabilities.get)
+        chosen_flaps = max(probabilities, key=probabilities.get)
 
         return list(chosen_flaps) # instead of tuple
 
-    def make_num_dice_decision_one_if_poss(self):
+    # pylint: enable=unused-argument
+
+    @staticmethod
+    def make_num_dice_decision_one_if_poss():
         """
         Returns how many dice to roll if we're allowed to roll a single
         die. In this method, we'll choose to always roll a single die if
@@ -206,8 +216,8 @@ class ComputerTurn(Turn):
         """
         return self.dice.num_dice
 
-    def perform_roll(self, num_dice_decision_method = None,
-                     flap_decision_method = None, debug = False):
+    def perform_roll(self, num_dice_decision_method=None,
+                     flap_decision_method=None, debug=False):
         """
         Perform a dice roll based on the number-of-dice decision method
         supplied and lower flaps based on the flap decision method
@@ -228,29 +238,34 @@ class ComputerTurn(Turn):
         # if our decision method returns 1 (die) and we're allowed to roll a
         # single die, do this
         if (num_dice_decision_method() == 1 and
-            self.box.sum_available_flaps() <= self.max_flap_sum_single_die):
-            if debug: print('Rolling single die')
+                self.box.sum_available_flaps() <= self.max_flap_sum_single_die):
+            if debug:
+                print('Rolling single die')
             dice_total = self.dice.roll(1)
         else:
             dice_total = self.dice.roll()
-            if debug: print('Rolling all dice')
-        if debug: print('Dice total:', dice_total)
+            if debug:
+                print('Rolling all dice')
+        if debug:
+            print('Dice total:', dice_total)
 
         # decide which flaps to lower and lower them
         available_flap_nums = list(self.box.get_available_flaps().keys())
         flap_nums_to_lower = flap_decision_method(
             available_flap_nums, dice_total, num_dice_decision_method)
         if not flap_nums_to_lower: # if impossible to lower any flaps
-            if debug: print('Impossible to lower any flaps')
+            if debug:
+                print('Impossible to lower any flaps')
             return False
-        if debug: print('Lowering flaps:', flap_nums_to_lower)
+        if debug:
+            print('Lowering flaps:', flap_nums_to_lower)
         for this_flap_num in flap_nums_to_lower:
             self.box.flaps[this_flap_num].lower()
 
         return True
 
-    def perform_turn(self, num_dice_decision_method = None,
-                     flap_decision_method = None, debug = False):
+    def perform_turn(self, num_dice_decision_method=None,
+                     flap_decision_method=None, debug=False):
         """
         Performs this turn and returns the resulting score i.e. sum of
         flap numbers.
@@ -266,9 +281,9 @@ class ComputerTurn(Turn):
         # if roll performed and no flaps could be lowered, stop the turn
         while (self.box.sum_available_flaps() > 0 and
                self.perform_roll(
-                   debug = debug,
-                   num_dice_decision_method = num_dice_decision_method,
-                   flap_decision_method = flap_decision_method)):
+                   debug=debug,
+                   num_dice_decision_method=num_dice_decision_method,
+                   flap_decision_method=flap_decision_method)):
             if debug:
                 print('\n', self.box)
                 print('Flap sum:', self.box.sum_available_flaps())
@@ -276,4 +291,3 @@ class ComputerTurn(Turn):
         score = self.box.sum_available_flaps()
         self.box.__init__() # re-initialise our box with all flaps up
         return score
-

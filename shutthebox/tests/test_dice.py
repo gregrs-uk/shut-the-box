@@ -29,7 +29,7 @@ class TestDice:
         # try 1000 rolls
         for _ in range(0, 1000):
             total = self.two_dice.roll()
-            assert total >= 1 and total <= 12 and isinstance(total, int)
+            assert isinstance(total, int) and 1 <= total <= 12
 
     def test_number_of_dice_single(self):
         assert self.one_die.num_dice == 1
@@ -38,13 +38,13 @@ class TestDice:
         # try 1000 rolls
         for _ in range(0, 1000):
             total = self.one_die.roll()
-            assert total >= 1 and total <= 6 and isinstance(total, int)
+            assert isinstance(total, int) and 1 <= total <= 6
 
     def test_roll_single_die_from_two(self):
         # try 1000 rolls
         for _ in range(0, 1000):
             total = self.two_dice.roll(1)
-            assert total >= 1 and total <= 6 and isinstance(total, int)
+            assert isinstance(total, int) and 1 <= total <= 6
 
     @raises(ValueError)
     def test_roll_dice_too_few(self):
