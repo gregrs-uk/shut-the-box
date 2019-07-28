@@ -10,9 +10,9 @@ class HumanTurn(Turn):
 
     def check_num_dice_decision(self, string):
         """
-        Check player's input for how many dice they want to use. Return number
-        of dice (int) if valid and False if invalid, printing a reason if
-        invalid.
+        Check player's input for how many dice they want to use. Return
+        number of dice (int) if valid and False if invalid, printing a
+        reason if invalid.
 
         string (str): number of dice chosen
         """
@@ -47,9 +47,9 @@ class HumanTurn(Turn):
 
     def check_flaps_decision(self, string, dice_total):
         """
-        Check player's input for which flaps to lower. Return True if valid 
-        and False if invalid, printing a reason if invalid. Raise ValueError 
-        if string is not a str.
+        Check player's input for which flaps to lower. Return True if
+        valid and False if invalid, printing a reason if invalid. Raise
+        ValueError if string is not a str.
 
         string (str): player's input
         dice_total (int): sum of dice
@@ -87,7 +87,8 @@ class HumanTurn(Turn):
 
     def perform_roll(self): # pragma: no cover
         """
-        Perform a dice roll and lower flaps based on the player's decisions.
+        Perform a dice roll and lower flaps based on the player's
+        decisions.
         """
         print(self.box, '\n')
 
@@ -126,8 +127,8 @@ class HumanTurn(Turn):
 
     def perform_turn(self): # pragma: no cover
         """
-        Performs this turn and returns the resulting score i.e. sum of flap 
-        numbers.
+        Performs this turn and returns the resulting score i.e. sum of
+        flap numbers.
         """
         while self.box.sum_available_flaps() > 0 and self.perform_roll():
             pass

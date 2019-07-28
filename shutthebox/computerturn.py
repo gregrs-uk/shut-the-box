@@ -29,8 +29,8 @@ class ComputerTurn(Turn):
 
     def remove_greater_than(self, list, n):
         """
-        From a supplied list, returns a new list with any original elements 
-        which were greater than n removed.
+        From a supplied list, returns a new list with any original
+        elements which were greater than n removed.
 
         list (list): original list from which to remove elements
         """
@@ -40,9 +40,9 @@ class ComputerTurn(Turn):
     def make_flap_decision_highest(
             self, flap_nums, dice_total, num_dice_decision_method = None):
         """
-        Returns a list of numbers which sum to the dice total from a list of
-        possible flap numbers, or False if this is impossible. Always prefers 
-        to use a higher-numbered flap whenever possible.
+        Returns a list of numbers which sum to the dice total from a
+        list of possible flap numbers, or False if this is impossible.
+        Always prefers to use a higher-numbered flap whenever possible.
 
         flap_nums (list of ints): flap numbers available
         dice_total (int): total shown on dice
@@ -75,9 +75,9 @@ class ComputerTurn(Turn):
     def make_flap_decision_lowest(
             self, flap_nums, dice_total, num_dice_decision_method = None):
         """
-        Returns a list of numbers which sum to the dice total from a list of 
-        possible flap numbers, or False if this is impossible. Always prefers 
-        to use a lower-numbered flap whenever possible.
+        Returns a list of numbers which sum to the dice total from a
+        list of possible flap numbers, or False if this is impossible.
+        Always prefers to use a lower-numbered flap whenever possible.
 
         flap_nums (list of ints): flap numbers available
         dice_total (int): total shown on dice
@@ -102,9 +102,9 @@ class ComputerTurn(Turn):
     def calculate_success_probability(
             self, flap_nums, num_dice_decision_method):
         """
-        Calculate the probability of being able to close at least one flap if
-        the flaps in the flap_nums list are left open. Use the decision method
-        supplied to decide how many dice to use.
+        Calculate the probability of being able to close at least one
+        flap if the flaps in the flap_nums list are left open. Use the
+        decision method supplied to decide how many dice to use.
         """
         single_die = False
         # if allowed to use a single die and we decide to
@@ -140,12 +140,12 @@ class ComputerTurn(Turn):
     def make_flap_decision_next_roll_probability(
             self, flap_nums, dice_total, num_dice_decision_method):
         """
-        Returns a list of numbers which sum to the dice total from a list of
-        possible flap numbers, or False if this is impossible. Chooses flap
-        numbers which maximise the probability of success on the next roll using
-        the calculate_success_probability() method. Uses the decision method
-        supplied to decide how many dice to use in calculating probabilities
-        for the next roll.
+        Returns a list of numbers which sum to the dice total from a
+        list of possible flap numbers, or False if this is impossible.
+        Chooses flap numbers which maximise the probability of success
+        on the next roll using the calculate_success_probability()
+        method. Uses the decision method supplied to decide how many
+        dice to use in calculating probabilities for the next roll.
         """
 
         # create an empty dict to hold next-turn success probabilities
@@ -188,23 +188,26 @@ class ComputerTurn(Turn):
 
     def make_num_dice_decision_one_if_poss(self):
         """
-        Returns how many dice to roll if we're allowed to roll a single die. 
-        In this method, we'll choose to always roll a single die if allowed.
+        Returns how many dice to roll if we're allowed to roll a single
+        die. In this method, we'll choose to always roll a single die if
+        allowed.
         """
         return 1
 
     def make_num_dice_decision_always_all(self):
         """
-        Returns how many dice to roll if we're allowed to roll a single die. 
-        In this method, we'll choose to always roll a single die if allowed.
+        Returns how many dice to roll if we're allowed to roll a single
+        die. In this method, we'll choose to always roll a single die if
+        allowed.
         """
         return self.dice.num_dice
 
     def perform_roll(self, num_dice_decision_method = None,
                      flap_decision_method = None, debug = False):
         """
-        Perform a dice roll based on the number-of-dice decision method 
-        supplied and lower flaps based on the flap decision method supplied.
+        Perform a dice roll based on the number-of-dice decision method
+        supplied and lower flaps based on the flap decision method
+        supplied.
 
         num_dice_decision_method (method): default
             make_num_dice_decision_one_if_poss
@@ -245,8 +248,8 @@ class ComputerTurn(Turn):
     def perform_turn(self, num_dice_decision_method = None,
                      flap_decision_method = None, debug = False):
         """
-        Performs this turn and returns the resulting score i.e. sum of flap 
-        numbers.
+        Performs this turn and returns the resulting score i.e. sum of
+        flap numbers.
 
         debug (bool): print debug information relating to this turn?
         """
