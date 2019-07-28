@@ -116,8 +116,20 @@ class TestComputerTurn:
         # can't == with float
         assert prob - (15 / float(36)) < 0.001
 
+    def test_flap_decision_next_roll_prob_impossible(self):
+        self.lower_flaps_except([3])
+        flaps = self.turn.make_flap_decision_next_roll_probability(
+            2, self.turn.make_num_dice_decision_one_if_poss)
+        assert flaps is False
+
+    def test_flap_decision_bill_impossible(self):
+        self.lower_flaps_except([3])
+        flaps = self.turn.make_flap_decision_bill(
+            2, self.turn.make_num_dice_decision_one_if_poss)
+        assert flaps is False
+
     def test_flap_decision_next_roll_prob_1to5_roll_7(self):
-        # for comparison with test below
+        # for comparison with tests below
         # (c.f. calculate_success_probability tests above)
         self.lower_flaps_except([1, 2, 3, 4, 5])
         flaps = self.turn.make_flap_decision_next_roll_probability(
@@ -125,17 +137,18 @@ class TestComputerTurn:
         assert flaps == [4, 3]
 
     def test_flap_decision_highest_1to5_roll_7(self):
-        # for comparison with test above
+        # for comparison with tests above and below
         self.lower_flaps_except([1, 2, 3, 4, 5])
         flaps = self.turn.make_flap_decision_highest(
             7, self.turn.make_num_dice_decision_one_if_poss)
         assert flaps == [2, 5]
 
-    def test_flap_decision_next_roll_prob_impossible(self):
-        self.lower_flaps_except([3])
-        flaps = self.turn.make_flap_decision_next_roll_probability(
-            2, self.turn.make_num_dice_decision_one_if_poss)
-        assert flaps is False
+    def test_flap_decision_bill_1to5_roll_7(self):
+        # for comparison with tests above
+        self.lower_flaps_except([1, 2, 3, 4, 5])
+        flaps = self.turn.make_flap_decision_bill(
+            7, self.turn.make_num_dice_decision_one_if_poss)
+        assert flaps == [3, 4]
 
     def test_num_dice_decision_always_all(self):
         assert self.turn.make_num_dice_decision_always_all() == 2

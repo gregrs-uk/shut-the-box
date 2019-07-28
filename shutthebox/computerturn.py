@@ -4,8 +4,47 @@ Defines the ComputerTurn class of shutthebox.
 
 import itertools
 import collections
+import os
 
 from .turn import Turn
+
+def import_bill(file_path):
+    """
+    Import Durango Bill's optimal strategy file and return it as a dict.
+    """
+    bill = [line.rstrip('\n') for line in open(file_path)]
+    bill = bill[21:533]
+
+    # create a dict: eventually the key will be a tuple of flap numbers
+    # already closed and the value will be a dict with the flaps to close
+    # for each possible dice sum
+    table = {}
+
+    for this_row in bill:
+        this_row = this_row.split()
+
+        # split numbers from first column into a list to be the dict key
+        flaps_down = [int(c) for c in this_row[0]]
+        if flaps_down == [0]:
+            flaps_down = []
+
+        # for each dict value, create another dict
+        # where the key is the dice sum and the value is the flaps to close
+        dice_sum = 1
+        flaps_to_lower = {}
+        for col in range(2, 13 + 1):
+            flaps_to_lower[dice_sum] = [int(c) for c in this_row[col]
+                                        if c != '0']
+            # if cell not blank, check that flaps to lower sum to dice sum
+            if (flaps_to_lower[dice_sum] and
+                    dice_sum != sum(flaps_to_lower[dice_sum])):
+                raise RuntimeError("Flaps to lower don't sum to dice sum")
+            dice_sum += 1
+
+        # add this row's data to the table dict
+        table[tuple(flaps_down)] = flaps_to_lower
+
+    return table
 
 class ComputerTurn(Turn):
     """
@@ -30,6 +69,15 @@ class ComputerTurn(Turn):
         self.dice_sum_probabilities = {}
         for dice_sum, freq in frequencies.items():
             self.dice_sum_probabilities[dice_sum] = freq / len(dice_sums)
+
+        self.bill_filename = 'bill-optimal-strategy.txt'
+        try:
+            # look for file in shutthebox directory
+            file_path = os.path.join(
+                os.path.dirname(__file__), self.bill_filename)
+            self.bill_table = import_bill(file_path)
+        except FileNotFoundError:
+            self.bill_table = False
 
     @staticmethod
     def remove_greater_than(lst, num):
@@ -199,6 +247,33 @@ class ComputerTurn(Turn):
 
         return list(chosen_flaps) # instead of tuple
 
+    def make_flap_decision_bill(
+            self, dice_total, num_dice_decision_method):
+        """
+        Returns a list of numbers which sum to the dice total from a
+        list of possible flap numbers, or False if this is impossible.
+        Chooses flap numbers using Durango Bill's optimal strategy
+        table.
+        """
+        if not self.bill_table:
+            raise RuntimeError(
+                "Couldn't find " + self.bill_filename + " so couldn't use " +
+                "make_flap_decision_bill.")
+
+        if num_dice_decision_method() != 1:
+            print(num_dice_decision_method(), self.dice.num_dice)
+            raise NotImplementedError(
+                "Can't (yet) use make_flap_decision_bill without option to " +
+                "use one die e.g. with make_num_dice_decision_always_all")
+
+        flaps_lowered = self.box.get_lowered_flaps().keys()
+        flaps_chosen = self.bill_table[tuple(flaps_lowered)][dice_total]
+
+        if not flaps_chosen:
+            return False
+
+        return flaps_chosen
+
     # pylint: enable=unused-argument
 
     @staticmethod
@@ -253,7 +328,7 @@ class ComputerTurn(Turn):
 
         # decide which flaps to lower and lower them
         flap_nums_to_lower = flap_decision_method(
-            available_flap_nums, dice_total, num_dice_decision_method)
+            dice_total, num_dice_decision_method)
         if not flap_nums_to_lower: # if impossible to lower any flaps
             if debug:
                 print('Impossible to lower any flaps')

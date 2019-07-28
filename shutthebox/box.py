@@ -28,6 +28,13 @@ class Box:
         return {num: flap for num, flap in self.flaps.items()
                 if not flap.is_down}
 
+    def get_lowered_flaps(self):
+        """
+        Returns a dict of objects for the flaps that are currently down.
+        """
+        return {num: flap for num, flap in self.flaps.items()
+                if flap.is_down}
+
     def sum_available_flaps(self):
         """
         Returns the sum of the numbers of the available flaps.
