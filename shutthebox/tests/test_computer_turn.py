@@ -150,5 +150,5 @@ class TestComputerTurn:
             assert isinstance(score, int) and score >= 0 and score <= 45
 
     def test_turn_with_debug(self):
-        score = self.turn.perform_turn(debug = True) 
+        score = self.turn.perform_turn(debug=True) 
         assert isinstance(score, int) and score >= 0 and score <= 45

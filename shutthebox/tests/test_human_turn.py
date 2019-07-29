@@ -20,36 +20,36 @@ class TestHumanTurn:
 
     @raises(ValueError)
     def test_check_num_dice_non_str(self):
-        self.turn.check_num_dice_decision(string = 1)
+        self.turn.check_num_dice_decision(string=1)
 
     def test_check_num_dice_non_int(self):
-        assert not self.turn.check_num_dice_decision(string = '1.5')
+        assert not self.turn.check_num_dice_decision(string='1.5')
 
     def test_check_num_dice_too_few(self):
-        assert not self.turn.check_num_dice_decision(string = '0')
+        assert not self.turn.check_num_dice_decision(string='0')
 
     def test_check_num_dice_too_many(self):
-        assert not self.turn.check_num_dice_decision(string = '3')
+        assert not self.turn.check_num_dice_decision(string='3')
 
     def test_check_num_dice_single_when_flap_sum_too_large(self):
         # all flaps still up
-        assert not self.turn.check_num_dice_decision(string = '1')
+        assert not self.turn.check_num_dice_decision(string='1')
 
     def test_check_num_dice_single_allowed(self):
         # leave only flaps 1, 2 and 3 (sum 6 = max_flap_sum_single_die)
         for this_flap_num in range(4, self.turn.box.num_flaps + 1):
             self.turn.box.flaps[this_flap_num].lower()
-        assert self.turn.check_num_dice_decision(string = '1') == 1
+        assert self.turn.check_num_dice_decision(string='1') == 1
 
     def test_check_num_dice_all_allowed_when_could_use_single(self):
         # leave only flaps 1, 2 and 3 (sum 6 = max_flap_sum_single_die)
         for this_flap_num in range(4, self.turn.box.num_flaps + 1):
             self.turn.box.flaps[this_flap_num].lower()
-        assert self.turn.check_num_dice_decision(string = '2') == 2
+        assert self.turn.check_num_dice_decision(string='2') == 2
 
     def test_check_num_dice_all_allowed_when_all_flaps_up(self):
         # all flaps still up
-        assert self.turn.check_num_dice_decision(string = '2') == 2
+        assert self.turn.check_num_dice_decision(string='2') == 2
 
     @raises(ValueError)
     def test_check_flaps_decision_non_str(self):
