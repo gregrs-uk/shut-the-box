@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
 
+"""
+Simulate many turns of Shut the Box using the flap decision method which
+favours lowering higher-numbered flaps and always using two dice. Output
+the score for each turn to the command line.
+"""
+
 import shutthebox
 
 box = shutthebox.Box()

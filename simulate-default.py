@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
 
+"""
+Simulate many turns of Shut the Box using the default decision methods.
+Output the score for each turn to the command line.
+"""
+
 import shutthebox
 
 box = shutthebox.Box()

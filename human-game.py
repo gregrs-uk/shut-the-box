@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+"""
+Play a human game of Shut the Box on the command line.
+"""
+
 import shutthebox
 from sys import exit
 
