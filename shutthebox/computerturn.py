@@ -46,17 +46,17 @@ class ComputerTurn(Turn):
     # pylint: disable=unused-argument
 
     def make_flap_decision_highest(
-            self, flap_nums, dice_total, num_dice_decision_method=None):
+            self, dice_total, num_dice_decision_method=None):
         """
         Returns a list of numbers which sum to the dice total from a
         list of possible flap numbers, or False if this is impossible.
         Always prefers to use a higher-numbered flap whenever possible.
 
-        flap_nums (list of ints): flap numbers available
         dice_total (int): total shown on dice
         """
         # just the flaps that are <= the dice total
-        flap_nums = self.remove_greater_than(flap_nums, dice_total)
+        flap_nums = self.remove_greater_than(
+            self.box.get_available_flaps().keys(), dice_total)
 
         # if we can make the dice total using a single flap, do that
         for flap_num in flap_nums:
@@ -81,17 +81,17 @@ class ComputerTurn(Turn):
         return False
 
     def make_flap_decision_lowest(
-            self, flap_nums, dice_total, num_dice_decision_method=None):
+            self, dice_total, num_dice_decision_method=None):
         """
         Returns a list of numbers which sum to the dice total from a
         list of possible flap numbers, or False if this is impossible.
         Always prefers to use a lower-numbered flap whenever possible.
 
-        flap_nums (list of ints): flap numbers available
         dice_total (int): total shown on dice
         """
         # just the flaps that are <= the dice total
-        flap_nums = self.remove_greater_than(flap_nums, dice_total)
+        flap_nums = self.remove_greater_than(
+            self.box.get_available_flaps().keys(), dice_total)
 
         # use combinations of flaps, preferring lower numbers
         # sort because flaps dict not returned in any specific order
@@ -147,7 +147,7 @@ class ComputerTurn(Turn):
         return prob
 
     def make_flap_decision_next_roll_probability(
-            self, flap_nums, dice_total, num_dice_decision_method):
+            self, dice_total, num_dice_decision_method):
         """
         Returns a list of numbers which sum to the dice total from a
         list of possible flap numbers, or False if this is impossible.
@@ -156,6 +156,8 @@ class ComputerTurn(Turn):
         method. Uses the decision method supplied to decide how many
         dice to use in calculating probabilities for the next roll.
         """
+
+        flap_nums = self.box.get_available_flaps().keys()
 
         # create an empty dict to hold next-turn success probabilities
         # key: tuple of flap numbers (can't use a list)
@@ -250,7 +252,6 @@ class ComputerTurn(Turn):
             print('Dice total:', dice_total)
 
         # decide which flaps to lower and lower them
-        available_flap_nums = list(self.box.get_available_flaps().keys())
         flap_nums_to_lower = flap_decision_method(
             available_flap_nums, dice_total, num_dice_decision_method)
         if not flap_nums_to_lower: # if impossible to lower any flaps
