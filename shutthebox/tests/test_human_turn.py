@@ -2,7 +2,7 @@
 Tests for the HumanTurn class of shutthebox.
 """
 
-from nose.tools import raises, assert_raises
+from nose.tools import raises
 import shutthebox
 
 # pylint: disable=missing-docstring
