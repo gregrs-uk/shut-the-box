@@ -1,3 +1,7 @@
+"""
+A Python 3 implementation of the dice game Shut the Box
+"""
+
 import sys
 
 if sys.version_info.major < 3: # pragma: no cover

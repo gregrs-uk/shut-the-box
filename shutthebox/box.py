@@ -1,3 +1,7 @@
+"""
+Defines the Box class of shutthebox.
+"""
+
 from .flap import Flap
 
 class Box:

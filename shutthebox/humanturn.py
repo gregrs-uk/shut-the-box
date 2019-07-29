@@ -1,3 +1,7 @@
+"""
+Defines the HumanTurn class of shutthebox.
+"""
+
 from .turn import Turn
 
 class HumanTurn(Turn):

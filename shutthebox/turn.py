@@ -1,3 +1,8 @@
+"""
+Defines the Turn class of shutthebox, inherited by HumanTurn and
+ComputerTurn.
+"""
+
 from .box import Box
 from .dice import Dice
 

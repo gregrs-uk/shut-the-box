@@ -1,3 +1,7 @@
+"""
+Defines the Dice class of shutthebox.
+"""
+
 import random
 
 class Dice:

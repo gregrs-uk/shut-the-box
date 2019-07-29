@@ -1,3 +1,7 @@
+"""
+Tests for the HumanTurn class of shutthebox.
+"""
+
 from nose.tools import raises, assert_raises
 import shutthebox
 

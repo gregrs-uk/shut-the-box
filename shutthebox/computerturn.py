@@ -1,3 +1,7 @@
+"""
+Defines the ComputerTurn class of shutthebox.
+"""
+
 import itertools
 import collections
 
