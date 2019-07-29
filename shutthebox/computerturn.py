@@ -11,6 +11,9 @@ from .turn import Turn
 def import_bill(file_path):
     """
     Import Durango Bill's optimal strategy file and return it as a dict.
+
+    file_path (str): path of text file downloaded from
+        http://www.durangobill.com/ShutTheBoxExtra/STB_1DIE.txt
     """
     bill = [line.rstrip('\n') for line in open(file_path)]
     bill = bill[21:533]
@@ -49,6 +52,9 @@ def import_bill(file_path):
 class ComputerTurn(Turn):
     """
     A subclass of Turn to represent turns taken by the computer.
+
+    box: instance of Box class to use for this turn
+    dice: instance of Dice class to use for this turn
     """
 
     def __init__(self, box, dice):
@@ -86,6 +92,7 @@ class ComputerTurn(Turn):
         elements which were greater than num removed.
 
         lst (list): original list from which to remove elements
+        num (int)
         """
         return [x for x in lst if not x > num]
 
@@ -100,7 +107,7 @@ class ComputerTurn(Turn):
         list of possible flap numbers, or False if this is impossible.
         Always prefers to use a higher-numbered flap whenever possible.
 
-        dice_total (int): total shown on dice
+        dice_total (int): sum of dice rolled
         """
         # just the flaps that are <= the dice total
         flap_nums = self.remove_greater_than(
@@ -135,7 +142,7 @@ class ComputerTurn(Turn):
         list of possible flap numbers, or False if this is impossible.
         Always prefers to use a lower-numbered flap whenever possible.
 
-        dice_total (int): total shown on dice
+        dice_total (int): sum of dice rolled
         """
         # just the flaps that are <= the dice total
         flap_nums = self.remove_greater_than(
@@ -159,8 +166,12 @@ class ComputerTurn(Turn):
             self, flap_nums, num_dice_decision_method):
         """
         Calculate the probability of being able to close at least one
-        flap if the flaps in the flap_nums list are left open. Use the
-        decision method supplied to decide how many dice to use.
+        flap if the flaps in flap_nums are left open and a specific
+        number of dice are rolled.
+
+        flap_nums (list)
+        num_dice_decision_method (method): used to decide how many dice
+            would be rolled
         """
         single_die = False
         # if allowed to use a single die and we decide to
@@ -201,8 +212,12 @@ class ComputerTurn(Turn):
         list of possible flap numbers, or False if this is impossible.
         Chooses flap numbers which maximise the probability of success
         on the next roll using the calculate_success_probability()
-        method. Uses the decision method supplied to decide how many
-        dice to use in calculating probabilities for the next roll.
+        method.
+
+        dice_total (int): sum of dice rolled
+        num_dice_decision_method (method): in calculating probabilities
+            it is assumed that this method will be used to decide how
+            many dice to use for the next roll
         """
 
         flap_nums = self.box.get_available_flaps().keys()
@@ -254,6 +269,11 @@ class ComputerTurn(Turn):
         list of possible flap numbers, or False if this is impossible.
         Chooses flap numbers using Durango Bill's optimal strategy
         table.
+
+        dice_total (int): sum of dice rolled
+        num_dice_decision_method (method): it is assumed that this
+            method will be used to decide how many dice to use for the
+            next roll
         """
         if not self.bill_table:
             raise RuntimeError(
@@ -296,14 +316,13 @@ class ComputerTurn(Turn):
     def perform_roll(self, num_dice_decision_method=None,
                      flap_decision_method=None, debug=False):
         """
-        Perform a dice roll based on the number-of-dice decision method
-        supplied and lower flaps based on the flap decision method
-        supplied.
+        Perform a dice roll and lower flaps. Return True if at least one
+        flap was lowered, otherwise False.
 
-        num_dice_decision_method (method): default
-            make_num_dice_decision_one_if_poss
-        flap_decision_method (method): default
-            make_flap_decision_next_roll_probability
+        num_dice_decision_method (method): used in deciding how many
+            dice to roll, default make_num_dice_decision_one_if_poss
+        flap_decision_method (method): used in deciding which flaps to
+            lower, default make_flap_decision_next_roll_probability
         debug (bool): print debug information relating to this roll?
         """
         if num_dice_decision_method is None:
@@ -343,9 +362,13 @@ class ComputerTurn(Turn):
     def perform_turn(self, num_dice_decision_method=None,
                      flap_decision_method=None, debug=False):
         """
-        Performs this turn and returns the resulting score i.e. sum of
+        Perform this turn and return the resulting score i.e. sum of
         flap numbers.
 
+        num_dice_decision_method (method): used in deciding how many
+            dice to roll, passed to perform_roll
+        flap_decision_method (method): used in deciding which flaps to
+            lower, passed to perform_roll
         debug (bool): print debug information relating to this turn?
         """
 
