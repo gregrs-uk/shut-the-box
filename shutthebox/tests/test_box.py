@@ -6,7 +6,7 @@ from nose.tools import raises, assert_raises
 import shutthebox
 
 class TestBox:
-    def setUp(self):
+    def setup(self):
         self.box = shutthebox.Box()
         self.big_box = shutthebox.Box(12)
 

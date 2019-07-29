@@ -6,7 +6,7 @@ from nose.tools import raises, assert_raises
 import shutthebox
 
 class TestDice:
-    def setUp(self):
+    def setup(self):
         self.two_dice = shutthebox.Dice()
         self.one_die = shutthebox.Dice(1)
 

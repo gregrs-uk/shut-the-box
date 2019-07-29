@@ -6,7 +6,7 @@ from nose.tools import raises, assert_raises
 import shutthebox
 
 class TestHumanTurn:
-    def setUp(self):
+    def setup(self):
         box = shutthebox.Box()
         dice = shutthebox.Dice()
         self.turn = shutthebox.HumanTurn(box, dice)

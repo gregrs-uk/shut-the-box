@@ -6,7 +6,7 @@ from nose.tools import raises, assert_raises
 import shutthebox
 
 class TestComputerTurn:
-    def setUp(self):
+    def setup(self):
         box = shutthebox.Box()
         dice = shutthebox.Dice()
         three_dice = shutthebox.Dice(num_dice = 3)
