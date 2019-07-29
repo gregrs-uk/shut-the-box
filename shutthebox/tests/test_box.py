@@ -54,7 +54,7 @@ class TestBox:
                                      'DOWN:                           ')
 
     def test_str_flaps_all_down(self):
-        for this_flap_num, this_flap in self.big_box.flaps.items():
+        for _, this_flap in self.big_box.flaps.items():
             this_flap.lower()
         assert str(self.big_box) == ('  UP:                           \n' +
                                      'DOWN: 1 2 3 4 5 6 7 8 9 10 11 12')

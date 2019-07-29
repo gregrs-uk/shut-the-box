@@ -47,12 +47,12 @@ class Box:
         flap_range = range(1, self.num_flaps + 1)
         for this_flap_no in flap_range:
             if self.flaps[this_flap_no].is_down:
-                for this_char in str(this_flap_no):
+                for _ in str(this_flap_no):
                     up_string += ' '
                 down_string += str(this_flap_no)
             else:
                 up_string += str(this_flap_no)
-                for this_char in str(this_flap_no):
+                for _ in str(this_flap_no):
                     down_string += ' '
             if this_flap_no != flap_range[-1]: # if not last flap
                 up_string += ' '

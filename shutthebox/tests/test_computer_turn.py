@@ -141,7 +141,7 @@ class TestComputerTurn:
 
     def test_turn_returns_valid_score(self):
         # try 1000 turns
-        for n in range(0, 1000):
+        for _ in range(0, 1000):
             score = self.turn.perform_turn() 
             assert isinstance(score, int) and score >= 0 and score <= 45
 

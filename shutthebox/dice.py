@@ -34,7 +34,7 @@ class Dice:
                              '{}'.format(self.num_dice))
 
         total = 0
-        for this_die in range(0, roll_dice):
+        for _ in range(0, roll_dice):
             total += random.randint(1, 6)
         return total
 
