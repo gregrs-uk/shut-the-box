@@ -5,6 +5,10 @@ Tests for the Dice class of shutthebox.
 from nose.tools import raises, assert_raises
 import shutthebox
 
+# pylint: disable=missing-docstring
+# pylint: disable=no-self-use
+# pylint: disable=attribute-defined-outside-init
+
 class TestDice:
     def setup(self):
         self.two_dice = shutthebox.Dice()

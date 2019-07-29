@@ -5,6 +5,10 @@ Tests for the ComputerTurn class of shutthebox.
 from nose.tools import raises, assert_raises
 import shutthebox
 
+# pylint: disable=missing-docstring
+# pylint: disable=no-self-use
+# pylint: disable=attribute-defined-outside-init
+
 class TestComputerTurn:
     def setup(self):
         box = shutthebox.Box()

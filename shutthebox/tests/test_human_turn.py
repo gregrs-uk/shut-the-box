@@ -5,6 +5,10 @@ Tests for the HumanTurn class of shutthebox.
 from nose.tools import raises, assert_raises
 import shutthebox
 
+# pylint: disable=missing-docstring
+# pylint: disable=no-self-use
+# pylint: disable=attribute-defined-outside-init
+
 class TestHumanTurn:
     def setup(self):
         box = shutthebox.Box()

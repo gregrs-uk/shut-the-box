@@ -5,6 +5,10 @@ Tests for the Flap class of shutthebox.
 from nose.tools import raises, assert_raises
 import shutthebox
 
+# pylint: disable=missing-docstring
+# pylint: disable=no-self-use
+# pylint: disable=attribute-defined-outside-init
+
 class TestFlap:
     def setup(self):
         self.flap = shutthebox.Flap(1)
