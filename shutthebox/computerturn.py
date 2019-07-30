@@ -55,9 +55,12 @@ class ComputerTurn(Turn):
 
     box: instance of Box class to use for this turn
     dice: instance of Dice class to use for this turn
+    bill_filename (str): name of text file downloaded from
+        http://www.durangobill.com/ShutTheBoxExtra/STB_1DIE.txt
     """
 
-    def __init__(self, box, dice):
+    def __init__(self, box, dice,
+                 bill_filename='bill-optimal-strategy.txt'):
         super(ComputerTurn, self).__init__(box, dice)
 
         # create dict of probabilities for rolling particular dice sums
@@ -76,7 +79,8 @@ class ComputerTurn(Turn):
         for dice_sum, freq in frequencies.items():
             self.dice_sum_probabilities[dice_sum] = freq / len(dice_sums)
 
-        self.bill_filename = 'bill-optimal-strategy.txt'
+        # used in error message for make_flap_decision_bill
+        self.bill_filename = bill_filename
         try:
             # look for file in shutthebox directory
             file_path = os.path.join(

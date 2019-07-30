@@ -2,6 +2,7 @@
 Tests for the ComputerTurn class of shutthebox.
 """
 
+from nose.tools import raises
 import shutthebox
 
 # pylint: disable=missing-docstring
@@ -127,6 +128,15 @@ class TestComputerTurn:
         flaps = self.turn.make_flap_decision_bill(
             2, self.turn.make_num_dice_decision_one_if_poss)
         assert flaps is False
+
+    @raises(RuntimeError)
+    def test_flap_decision_bill_no_file(self):
+        box = shutthebox.Box()
+        dice = shutthebox.Dice()
+        turn = shutthebox.ComputerTurn(
+            box, dice, bill_filename='wrong.txt')
+        turn.make_flap_decision_bill(
+            9, turn.make_num_dice_decision_one_if_poss)
 
     def test_flap_decision_next_roll_prob_1to5_roll_7(self):
         # for comparison with tests below
