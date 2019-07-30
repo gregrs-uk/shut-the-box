@@ -4,16 +4,22 @@
 Play a human game of Shut the Box on the command line.
 """
 
+import sys
 import shutthebox
-from sys import exit
+
+# pylint: disable=invalid-name
 
 box = shutthebox.Box()
 dice = shutthebox.Dice()
 
 def check_another_game_choice(string):
+    """
+    Check whether the user would like to play another game. Return True
+    if they would, False if not and None if their choice was invalid.
+    """
     if string[0].lower() == 'y':
         return True
-    elif string[0].lower() == 'n':
+    if string[0].lower() == 'n':
         return False
     print('Please enter Y or N')
     return None
@@ -28,4 +34,4 @@ while True:
             print()
             break
         if choice is False:
-            exit()
+            sys.exit()

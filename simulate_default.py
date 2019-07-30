@@ -7,6 +7,8 @@ Output the score for each turn to the command line.
 
 import shutthebox
 
+# pylint: disable=invalid-name
+
 box = shutthebox.Box()
 dice = shutthebox.Dice()
 
