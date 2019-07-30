@@ -41,6 +41,18 @@ class Box:
         """
         return sum(self.get_available_flaps().keys())
 
+    def lower_flaps_except(self, flap_nums):
+        """
+        Helper method to lower any flaps which are up except those
+        supplied. Useful for testing.
+
+        flap_nums (list): flap numbers to leave up
+        """
+        for this_flap_num in self.get_available_flaps().keys():
+            if this_flap_num not in flap_nums:
+                self.flaps[this_flap_num].lower()
+        return True
+
     def __str__(self):
         """
         Get a string representation of the state of the flaps e.g.
